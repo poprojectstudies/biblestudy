@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,12 +21,14 @@ public class MainActivity extends AppCompatActivity {
     private BibleService bibleService = new BibleService("90799bb5b996fddc-01");
 
     private TextView tvMainContent;
+    private ProgressBar pbLoadBooks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         tvMainContent = findViewById(R.id.tv_main_content);
+        pbLoadBooks = findViewById(R.id.pb_load_books);
     }
 
     @Override
@@ -40,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_search_book:
                 String searchingBook = getResources().getString(R.string.search_book_started);
                 Toast.makeText(context, searchingBook, Toast.LENGTH_SHORT).show();
+
+                pbLoadBooks.setVisibility(View.VISIBLE);
                 bibleService.getBooks(new Callback<BookList>() {
                     @Override
                     public void onResponse(Call<BookList> call, Response<BookList> response) {
@@ -49,11 +55,13 @@ public class MainActivity extends AppCompatActivity {
                             books.append(book.getName() + "\n\n\n\n");
                         }
 
+                        pbLoadBooks.setVisibility(View.INVISIBLE);
                         tvMainContent.setText(books.toString());
                     }
 
                     @Override
                     public void onFailure(Call<BookList> call, Throwable t) {
+                        pbLoadBooks.setVisibility(View.INVISIBLE);
                         String searchingBookFailed = getResources().getString(R.string.search_book_failed);
                         Toast.makeText(context, searchingBookFailed, Toast.LENGTH_SHORT).show();
                     }

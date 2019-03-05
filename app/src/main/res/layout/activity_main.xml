@@ -5,6 +5,13 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <ProgressBar
+        android:id="@+id/pb_load_books"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
