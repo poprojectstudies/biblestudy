@@ -1,4 +1,4 @@
-package br.com.finpe.biblestudy.dto;
+package br.com.finpe.biblestudy.books;
 
 import lombok.Getter;
 import lombok.Setter;

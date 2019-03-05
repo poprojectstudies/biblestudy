@@ -1,6 +1,6 @@
 package br.com.finpe.biblestudy.service;
 
-import br.com.finpe.biblestudy.dto.BookList;
+import br.com.finpe.biblestudy.books.BookList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;

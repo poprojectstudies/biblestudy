@@ -3,15 +3,17 @@ package br.com.finpe.biblestudy;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import br.com.finpe.biblestudy.dto.Book;
-import br.com.finpe.biblestudy.dto.BookList;
+import br.com.finpe.biblestudy.books.Book;
+import br.com.finpe.biblestudy.books.BookAdapter;
+import br.com.finpe.biblestudy.books.BookList;
 import br.com.finpe.biblestudy.service.BibleService;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,15 +22,20 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
     private BibleService bibleService = new BibleService("90799bb5b996fddc-01");
 
-    private TextView tvMainContent;
     private ProgressBar pbLoadBooks;
+    private RecyclerView bookList;
+    private BookAdapter bookAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        tvMainContent = findViewById(R.id.tv_main_content);
         pbLoadBooks = findViewById(R.id.pb_load_books);
+        bookList = findViewById(R.id.rv_books);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        bookList.setLayoutManager(layoutManager);
+        bookList.setHasFixedSize(true);
     }
 
     @Override
@@ -49,14 +56,9 @@ public class MainActivity extends AppCompatActivity {
                 bibleService.getBooks(new Callback<BookList>() {
                     @Override
                     public void onResponse(Call<BookList> call, Response<BookList> response) {
-                        StringBuilder books = new StringBuilder();
-
-                        for (Book book:response.body().getData()) {
-                            books.append(book.getName() + "\n\n\n\n");
-                        }
-
                         pbLoadBooks.setVisibility(View.INVISIBLE);
-                        tvMainContent.setText(books.toString());
+                        bookAdapter = new BookAdapter(response.body().getData());
+                        bookList.setAdapter(bookAdapter);
                     }
 
                     @Override
