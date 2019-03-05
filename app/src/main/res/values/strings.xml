@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Estudos bíblicos</string>
+    <string name="search_book">Buscar livro</string>
+    <string name="search_book_started">Buscando livro...</string>
+    <string name="search_book_failed">Falha ao recuperar lista de livros</string>
 </resources>
