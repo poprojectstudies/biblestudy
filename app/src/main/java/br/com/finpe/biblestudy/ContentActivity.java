@@ -1,6 +1,7 @@
 package br.com.finpe.biblestudy;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,7 +41,8 @@ public class ContentActivity extends AppCompatActivity {
         contentView.setLayoutManager(layoutManager);
 
         pbLoadContent.setVisibility(View.VISIBLE);
-        bibleService.getContent("gn", 1, new Callback<Content>() {
+        String bookId = getIntent().getStringExtra(Intent.EXTRA_TEXT);
+        bibleService.getContent(bookId, 1, new Callback<Content>() {
             @Override
             public void onResponse(Call<Content> call, Response<Content> response) {
                 pbLoadContent.setVisibility(View.INVISIBLE);
@@ -55,7 +57,6 @@ public class ContentActivity extends AppCompatActivity {
                 pbLoadContent.setVisibility(View.INVISIBLE);
                 String searchingBookFailed = getResources().getString(R.string.search_verses_failed);
                 setToastText(context, searchingBookFailed);
-
             }
         });
     }

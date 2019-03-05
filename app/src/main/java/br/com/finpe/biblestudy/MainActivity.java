@@ -1,6 +1,7 @@
 package br.com.finpe.biblestudy;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -93,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
 
     @Override
     public void onListItemClick(Book book) {
-        setToastText(this,"Item selecionado: " + book.getName());
+        Intent intent = new Intent(MainActivity.this, ContentActivity.class);
+        intent.putExtra(Intent.EXTRA_TEXT, book.getAbbrev());
+        startActivity(intent);
     }
 }
