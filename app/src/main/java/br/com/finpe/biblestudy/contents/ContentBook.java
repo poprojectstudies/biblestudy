@@ -1,15 +1,14 @@
-package br.com.finpe.biblestudy.books;
+package br.com.finpe.biblestudy.contents;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class Book {
+public class ContentBook {
     private String abbrev;
-    private String author;
-    private int chapters;
-    private String group;
     private String name;
-    private String testament;
+    private String author;
+    private String group;
+    private String version;
 }

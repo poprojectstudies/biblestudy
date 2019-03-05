@@ -3,4 +3,5 @@
     <string name="search_book">Livros</string>
     <string name="search_book_started">Carregando livro...</string>
     <string name="search_book_failed">Falha ao recuperar lista de livros</string>
+    <string name="search_verses_failed">Falha ao recuperar lista de versos</string>
 </resources>

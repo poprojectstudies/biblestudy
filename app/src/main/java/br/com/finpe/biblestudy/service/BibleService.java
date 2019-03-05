@@ -1,20 +1,18 @@
 package br.com.finpe.biblestudy.service;
 
-import br.com.finpe.biblestudy.books.BookList;
+import java.util.List;
+
+import br.com.finpe.biblestudy.books.Book;
+import br.com.finpe.biblestudy.contents.Content;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class BibleService {
-    private final String BASE_URL = "https://api.scripture.api.bible/v1/bibles/";
-    private final String bibleId;
+    private final String BASE_URL = "https://bibleapi.co/api/";
 
-    public BibleService(String bibleId) {
-        this.bibleId = bibleId;
-    }
-
-    public void getBooks(Callback<BookList> callback) {
+    public void getBooks(Callback<List<Book>> callback) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -22,8 +20,21 @@ public class BibleService {
 
         ScriptureApi service = retrofit.create(ScriptureApi.class);
 
-        Call<BookList> bookList = service.listBooks(bibleId);
+        Call<List<Book>> bookList = service.listBooks();
 
         bookList.enqueue(callback);
+    }
+
+    public void getContent(String bookId, int chapter, Callback<Content> callback) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ScriptureApi service = retrofit.create(ScriptureApi.class);
+
+        Call<Content> content = service.listContent(bookId, chapter);
+
+        content.enqueue(callback);
     }
 }

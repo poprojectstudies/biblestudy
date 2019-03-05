@@ -3,18 +3,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
+    tools:context=".ContentActivity"
+    android:padding="16dp">
     <ProgressBar
-        android:id="@+id/pb_load_books"
+        android:id="@+id/pb_load_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="invisible" />
 
+    <TextView
+        android:id="@+id/tv_content_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:text="Nome do livro"/>
+
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/rv_books" />
+        android:id="@+id/rv_content"
+        android:layout_marginTop="40dp"/>
 
 </FrameLayout>

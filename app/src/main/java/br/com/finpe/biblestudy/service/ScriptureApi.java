@@ -1,13 +1,17 @@
 package br.com.finpe.biblestudy.service;
 
-import br.com.finpe.biblestudy.books.BookList;
+import java.util.List;
+
+import br.com.finpe.biblestudy.books.Book;
+import br.com.finpe.biblestudy.contents.Content;
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.Path;
 
 public interface ScriptureApi {
-    @Headers("api-key: 1cff645d96a0979662467916496e67c4")
-    @GET("{bibleId}/books")
-    Call<BookList> listBooks(@Path("bibleId") String bibleId);
+    @GET("books")
+    Call<List<Book>> listBooks();
+
+    @GET("verses/nvi/{bookId}/{chapter}")
+    Call<Content> listContent(@Path("bookId") String bookId, @Path("chapter") int chapter);
 }

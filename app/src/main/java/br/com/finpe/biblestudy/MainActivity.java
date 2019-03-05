@@ -11,9 +11,10 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.util.List;
+
 import br.com.finpe.biblestudy.books.Book;
 import br.com.finpe.biblestudy.books.BookAdapter;
-import br.com.finpe.biblestudy.books.BookList;
 import br.com.finpe.biblestudy.common.ListItemClickListener;
 import br.com.finpe.biblestudy.service.BibleService;
 import retrofit2.Call;
@@ -21,7 +22,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements ListItemClickListener<Book> {
-    private BibleService bibleService = new BibleService("90799bb5b996fddc-01");
+    private BibleService bibleService = new BibleService();
 
     private ProgressBar pbLoadBooks;
     private RecyclerView bookListView;
@@ -57,17 +58,17 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
                 setToastText(context, searchingBook);
 
                 pbLoadBooks.setVisibility(View.VISIBLE);
-                bibleService.getBooks(new Callback<BookList>() {
+                bibleService.getBooks(new Callback<List<Book>>() {
                     @Override
-                    public void onResponse(Call<BookList> call, Response<BookList> response) {
+                    public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
                         pbLoadBooks.setVisibility(View.INVISIBLE);
-                        bookAdapter = new BookAdapter(response.body().getData(), listItemClickListener);
+                        bookAdapter = new BookAdapter(response.body(), listItemClickListener);
                         bookListView.setAdapter(bookAdapter);
                         cancelToast();
                     }
 
                     @Override
-                    public void onFailure(Call<BookList> call, Throwable t) {
+                    public void onFailure(Call<List<Book>> call, Throwable t) {
                         pbLoadBooks.setVisibility(View.INVISIBLE);
                         String searchingBookFailed = getResources().getString(R.string.search_book_failed);
                         setToastText(context, searchingBookFailed);
