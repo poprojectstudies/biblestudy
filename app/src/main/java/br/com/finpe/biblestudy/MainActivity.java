@@ -14,7 +14,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import br.com.finpe.biblestudy.books.Book;
@@ -51,12 +50,15 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
 
         if (savedInstanceState != null) {
             bookList = new ArrayList<>();
+            Parcelable[] parcelables = savedInstanceState.getParcelableArray(BOOK_LIST_RESULT);
 
-            for (Parcelable parcelable:savedInstanceState.getParcelableArray(BOOK_LIST_RESULT)) {
-                bookList.add((Book)parcelable);
+            if (parcelables != null & parcelables.length > 0) {
+                for (Parcelable parcelable:savedInstanceState.getParcelableArray(BOOK_LIST_RESULT)) {
+                    bookList.add((Book)parcelable);
+                }
+                bookAdapter = new BookAdapter(bookList, listItemClickListener);
+                bookListView.setAdapter(bookAdapter);
             }
-            bookAdapter = new BookAdapter(bookList, listItemClickListener);
-            bookListView.setAdapter(bookAdapter);
         }
     }
 
