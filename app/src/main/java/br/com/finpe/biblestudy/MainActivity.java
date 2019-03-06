@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
     public void onListItemClick(Book book) {
         Intent intent = new Intent(MainActivity.this, ContentActivity.class);
         intent.putExtra(Intent.EXTRA_TEXT, book.getAbbrev());
+        intent.putExtra(Intent.EXTRA_INDEX, 1);
         startActivity(intent);
     }
 }

@@ -11,4 +11,5 @@ public class Content {
     private ContentBook book;
     private Chapter chapter;
     private List<Verse> verses;
+    private Verse selectedVerse;
 }

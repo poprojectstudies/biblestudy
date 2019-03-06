@@ -11,12 +11,17 @@ import android.widget.TextView;
 import java.util.List;
 
 import br.com.finpe.biblestudy.R;
+import br.com.finpe.biblestudy.common.ListItemClickListener;
 
 public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentViewHolder> {
+    private final Content content;
     private List<Verse> verses;
+    private ListItemClickListener<Content> listItemClickListener;
 
-    public ContentAdapter(List<Verse> verses) {
-        this.verses = verses;
+    public ContentAdapter(Content content, ListItemClickListener<Content> listItemClickListener) {
+        this.content = content;
+        this.verses = content.getVerses();
+        this.listItemClickListener = listItemClickListener;
     }
 
     @NonNull
@@ -42,16 +47,25 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ContentV
         return verses.size();
     }
 
-    class ContentViewHolder extends RecyclerView.ViewHolder {
+    class ContentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView tvVerseText;
+        private Verse verse;
 
         public ContentViewHolder(@NonNull View itemView) {
             super(itemView);
             tvVerseText = itemView.findViewById(R.id.tv_verse_text);
+            itemView.setOnClickListener(this);
         }
 
         public void bind(Verse verse) {
+            this.verse = verse;
             tvVerseText.setText(verse.getText());
+        }
+
+        @Override
+        public void onClick(View v) {
+            content.setSelectedVerse(verse);
+            listItemClickListener.onListItemClick(content);
         }
     }
 }
