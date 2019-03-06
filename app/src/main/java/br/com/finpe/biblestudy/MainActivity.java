@@ -3,6 +3,7 @@ package br.com.finpe.biblestudy;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import br.com.finpe.biblestudy.books.Book;
@@ -23,6 +26,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements ListItemClickListener<Book> {
+    public final String BOOK_LIST_RESULT = "bookListResult";
+
     private BibleService bibleService = new BibleService();
 
     private ProgressBar pbLoadBooks;
@@ -30,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
     private BookAdapter bookAdapter;
     private ListItemClickListener<Book> listItemClickListener;
     private Toast toast;
+    private List<Book> bookList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +48,29 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         bookListView.setLayoutManager(layoutManager);
         bookListView.setHasFixedSize(true);
+
+        if (savedInstanceState != null) {
+            bookList = new ArrayList<>();
+
+            for (Parcelable parcelable:savedInstanceState.getParcelableArray(BOOK_LIST_RESULT)) {
+                bookList.add((Book)parcelable);
+            }
+            bookAdapter = new BookAdapter(bookList, listItemClickListener);
+            bookListView.setAdapter(bookAdapter);
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelableArray(BOOK_LIST_RESULT, bookList.toArray(new Book[bookList.size()]));
     }
 
     @Override
@@ -63,7 +86,8 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
                     @Override
                     public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
                         pbLoadBooks.setVisibility(View.INVISIBLE);
-                        bookAdapter = new BookAdapter(response.body(), listItemClickListener);
+                        bookList = response.body();
+                        bookAdapter = new BookAdapter(bookList, listItemClickListener);
                         bookListView.setAdapter(bookAdapter);
                         cancelToast();
                     }
