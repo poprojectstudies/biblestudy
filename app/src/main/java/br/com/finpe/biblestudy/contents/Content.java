@@ -6,10 +6,12 @@ import android.os.Parcelable;
 import java.util.List;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Content implements Parcelable {
     private ContentBook book;
     private Chapter chapter;

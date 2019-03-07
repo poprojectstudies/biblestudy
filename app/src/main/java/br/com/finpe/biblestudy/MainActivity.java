@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
     private BookAdapter bookAdapter;
     private ListItemClickListener<Book> listItemClickListener;
     private Toast toast;
-    private List<Book> bookList;
+    private List<Book> bookList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +52,11 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
             bookList = new ArrayList<>();
             Parcelable[] parcelables = savedInstanceState.getParcelableArray(BOOK_LIST_RESULT);
 
-            if (parcelables != null & parcelables.length > 0) {
-                for (Parcelable parcelable:savedInstanceState.getParcelableArray(BOOK_LIST_RESULT)) {
-                    bookList.add((Book)parcelable);
-                }
-                bookAdapter = new BookAdapter(bookList, listItemClickListener);
-                bookListView.setAdapter(bookAdapter);
+            for (Parcelable parcelable:savedInstanceState.getParcelableArray(BOOK_LIST_RESULT)) {
+                bookList.add((Book)parcelable);
             }
+            bookAdapter = new BookAdapter(bookList, listItemClickListener);
+            bookListView.setAdapter(bookAdapter);
         }
     }
 

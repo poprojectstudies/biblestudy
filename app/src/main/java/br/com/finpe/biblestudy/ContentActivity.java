@@ -32,7 +32,7 @@ public class ContentActivity extends AppCompatActivity implements ListItemClickL
     private TextView tvContentName;
     private ListItemClickListener<Content> listItemClickListener;
     private Toast toast;
-    private Content content;
+    private Content content = new Content();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
