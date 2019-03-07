@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import br.com.finpe.biblestudy.books.Book;
 import br.com.finpe.biblestudy.common.ListItemClickListener;
 import br.com.finpe.biblestudy.contents.Content;
 import br.com.finpe.biblestudy.contents.ContentAdapter;
@@ -21,6 +22,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ContentActivity extends AppCompatActivity implements ListItemClickListener<Content> {
+    public final String VERSE_LIST_RESULT = "verseListResult";
+
     private BibleService bibleService = new BibleService();
 
     private ProgressBar pbLoadContent;
@@ -29,6 +32,7 @@ public class ContentActivity extends AppCompatActivity implements ListItemClickL
     private TextView tvContentName;
     private ListItemClickListener<Content> listItemClickListener;
     private Toast toast;
+    private Content content;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,27 +48,43 @@ public class ContentActivity extends AppCompatActivity implements ListItemClickL
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         contentView.setLayoutManager(layoutManager);
 
-        pbLoadContent.setVisibility(View.VISIBLE);
         String bookId = getIntent().getStringExtra(Intent.EXTRA_TEXT);
         int chapter = getIntent().getIntExtra(Intent.EXTRA_INDEX, 1);
 
-        bibleService.getContent(bookId, chapter, new Callback<Content>() {
-            @Override
-            public void onResponse(Call<Content> call, Response<Content> response) {
-                pbLoadContent.setVisibility(View.INVISIBLE);
-                Content content = response.body();
-                contentAdapter = new ContentAdapter(content, listItemClickListener);
-                contentView.setAdapter(contentAdapter);
-                tvContentName.setText(String.format("%s - %s", content.getBook().getName(), content.getChapter().getNumber()));
-            }
+        if (savedInstanceState != null) {
+            content = savedInstanceState.getParcelable(VERSE_LIST_RESULT);
+            fillContent();
+        } else {
+            pbLoadContent.setVisibility(View.VISIBLE);
+            bibleService.getContent(bookId, chapter, new Callback<Content>() {
+                @Override
+                public void onResponse(Call<Content> call, Response<Content> response) {
+                    pbLoadContent.setVisibility(View.INVISIBLE);
+                    content = response.body();
+                    fillContent();
+                }
 
-            @Override
-            public void onFailure(Call<Content> call, Throwable t) {
-                pbLoadContent.setVisibility(View.INVISIBLE);
-                String searchingBookFailed = getResources().getString(R.string.search_verses_failed);
-                setToastText(context, searchingBookFailed);
-            }
-        });
+                @Override
+                public void onFailure(Call<Content> call, Throwable t) {
+                    pbLoadContent.setVisibility(View.INVISIBLE);
+                    String searchingBookFailed = getResources().getString(R.string.search_verses_failed);
+                    setToastText(context, searchingBookFailed);
+                }
+            });
+        }
+    }
+
+    private void fillContent() {
+        contentAdapter = new ContentAdapter(content, listItemClickListener);
+        contentView.setAdapter(contentAdapter);
+        tvContentName.setText(String.format("%s - %s", content.getBook().getName(), content.getChapter().getNumber()));
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable(VERSE_LIST_RESULT, content);
     }
 
     private void setToastText(Context context, String text) {
